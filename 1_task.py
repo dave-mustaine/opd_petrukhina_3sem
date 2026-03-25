@@ -80,7 +80,6 @@ def get_line_from_file(filename, line_number):
             return f"Номер строки должен быть от 1 до {len(lines)}"
 
         return lines[line_number - 1].strip()
-
     except FileNotFoundError:
         return f"Файл '{filename}' не найден"
     except Exception as e:
