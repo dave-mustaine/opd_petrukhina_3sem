@@ -46,6 +46,7 @@ plt.plot(cst_theta_deg, cst_D_db, 'r--', label='CST')
 plt.title('D (dBi) - Декартова система')
 plt.grid(True)
 plt.legend()
+plt.savefig('dc2_results.png')
 print(f'График сохранён в файл dc2_results.png')
 
 plt.figure(figsize=(6, 6))
@@ -69,4 +70,4 @@ ax4.legend(loc='lower right')
 plt.savefig('dc4_results.png')
 print(f'График сохранён в файл dc4_results.png')
 
-plt.show()
+# plt.show()

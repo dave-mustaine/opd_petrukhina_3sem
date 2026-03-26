@@ -1,13 +1,14 @@
 import numpy as np
 from scipy.special import spherical_jn, spherical_yn
 import matplotlib.pyplot as plt
+from get_variant import get_variant_data
 
 C = 299792458.0
-task = 'task_rcs_02.txt'
+task = 'task_rcs_02.json'
 
 class SphereRCS:
-    def __init__(self, D_input):
-        self.r = D_input / 2.0
+    def __init__(self, D_sphere):
+        self.r = D_sphere / 2.0
         print(f'Радиус сферы r = {self.r} м')
 
     def h_n(self, n, x):
@@ -43,8 +44,8 @@ class SphereRCS:
         return sigma
 
 
-def run_simulation(D, f_min, f_max, num_points=200):
-    rcs_calc = SphereRCS(D_input=D)
+def run_simulation(D_sphere, f_min, f_max, num_points=200):
+    rcs_calc = SphereRCS(D_sphere)
     frequencies = np.linspace(f_min, f_max, num_points)
     rcs_values = [rcs_calc.calculate_sigma(f) for f in frequencies]
     output_filename = 'rcs_results.txt'
@@ -60,7 +61,7 @@ def run_simulation(D, f_min, f_max, num_points=200):
         print('Ошибка сохранения файла')
 
     plt.figure(figsize=(10, 6))
-    plt.plot(frequencies / 1e9, rcs_values, label=f'D = {D} м')
+    plt.plot(frequencies / 1e9, rcs_values, label=f'D = {D_sphere} м')
     plt.title('Эффективная площадь рассеяния идеально проводящей сферы')
     plt.xlabel('Частота, f (ГГц)')
     plt.ylabel('ЭПР, $\sigma$ ($м^2$)')
@@ -86,24 +87,12 @@ def get_line_from_file(filename, line_number):
         return f"Ошибка: {str(e)}"
 
 
-def main():
-    filename = task
+# variant = list()
+variant = get_variant_data_1()
 
-    try:
-        result = get_line_from_file(filename, variant)
-        values = result.split()
-        return values
-    except ValueError:
-        print("Ошибка: введите корректное число")
+D_sphere = variant[0]
+F_min = variant[1]
+F_max = variant[2]
 
-
-variant = int(input('Введите номер варианта \n')) + 1
-
-_, sD_sphere, sF_min, sF_max = main()
-
-D_sphere = float(sD_sphere)
-F_min = float(sF_min)
-F_max = float(sF_max)
-
-print(f'Расчет для D = {D_sphere} м в диапазоне от {F_min / 1e9:.1f} ГГц до {F_max / 1e9:.1f} ГГц')
+print(f'Расчет для D = {D_sphere} м в диапазоне от {F_min} ГГц до {F_max} ГГц')
 run_simulation(D_sphere, F_min, F_max)
